@@ -7,7 +7,7 @@ Things ToDo:
     - Fix overall website tidyness (all proper logos, card counts, proper subpages, add missing possible pages
     Change homepage banner?, create logo with chatgpt, create better name?)
 
-    - Set up user account login
+    - Set up user account login 
 
     Low Priority: 
     - Setup price alerts
@@ -17,3 +17,4 @@ Things ToDo:
     - Stripe API (for possible paywalled features)
     - Language Switching
     - Japanese Sets
+    - Add other login/register options 
