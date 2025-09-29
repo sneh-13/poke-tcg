@@ -7,7 +7,7 @@ Things ToDo:
     - Fix overall website tidyness (all proper logos, card counts, proper subpages, add missing possible pages
     Change homepage banner?, create logo with chatgpt, create better name?)
 
-    - Set up user account login 
+    - Set up user account login (add forget password feature [use any temporary email])
 
     Low Priority: 
     - Setup price alerts
