@@ -1,6 +1,6 @@
 Things ToDo:
 
-    Current Priosrity: 
+    Current Priority: 
     - Fix overall website tidyness (all proper logos, card counts, proper subpages, add missing possible pages
     Change homepage banner?, create logo with chatgpt, create better name?)
     - Set up user account login (add forget password feature [use any temporary email])
