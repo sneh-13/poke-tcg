@@ -1844,7 +1844,7 @@ function getLogoPath(set) {
         'ecard': 'e-card',
         'lc': 'legendary-collection',
         'neo': 'neo',
-        'topps': 'gym', // Topps maps to gym era
+        'topps': 'topps-chrome',
         'gym': 'gym',
         'base': 'base'
     };
@@ -1888,11 +1888,30 @@ function getLogoPath(set) {
         'EX Ruby & Sapphire': 'ruby-sapphire',
         'EX FireRed & LeafGreen': 'firered-leafgreen',
         'EX Team Magma vs Team Aqua': 'team-magma-vs-team-aqua',
+        'EX Dragon': 'dragon',
+        'EX Power Keepers': 'power-keepers',
+        'EX Dragon Frontiers': 'dragon-frontiers',
+        'EX Crystal Guardians': 'crystal-guardians',
+        'EX Holon Phantoms': 'holon-phantoms',
+        'EX Legend Maker': 'legend-maker',
+        'EX Delta Species': 'delta-species',
+        'EX Unseen Forces Unown Collection': 'unseen-forces-unown-collection',
+        'EX Unseen Forces': 'unseen-forces',
+        'EX Emerald': 'emerald',
+        'EX Deoxys': 'deoxys',
+        'EX Team Rocket Returns': 'team-rocket-returns',
+        'EX Hidden Legends': 'hidden-legends',
+        'EX Sandstorm': 'sandstorm',
 
         // Diamond & Pearl
         'Diamond & Pearl': 'diamond-and-pearl',
         'DP Black Star Promos': 'diamond-and-pearl-promos',
 
+        // Topps Chrome
+        'Topps Series 1': 'topps-chrome',
+        'Topps Series 2': 'topps-chrome',
+        'Topps Series 3': 'topps-chrome',
+        
         // Base/Classic
         'Base Set': 'base',
         'Base Set 2': 'base-set-2',
