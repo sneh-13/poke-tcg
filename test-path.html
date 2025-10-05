@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test Logo Paths</title>
+</head>
+<body>
+    <h1>Testing Logo Paths</h1>
+    <div id="test-results"></div>
+
+    <script>
+        // Copy the getLogoPath function from script.js
+        const seriesMap = {
+            'mega': '16-Mega-Evolutions',
+            'sv': '15-Scarlet-&-Violet',
+            'swsh': '14-Sword-&-Shield',
+            'sm': '13-Sun-&-Moon',
+            'xy': '12-XY',
+            'bw': '11-Black-&-White',
+            'hgss': '10-HeartGold-SoulSilver',
+            'pl': '09-Platinum',
+            'dp': '07-Diamond-and-Pearl',
+            'ex': '06-EX',
+            'ecutie': '05-eCard',
+            'legendary': '04-Legendary-Collection',
+            'neo': '03-Neo',
+            'gym': '02-Gym',
+            'base': '01-Base',
+            'nintendo': '08-Nintendo',
+            'topps': '17-Topps'
+        };
+
+        function getLogoPath(id) {
+            const pokemonSets = [
+                { id: 'surging-sparks', series: 'sv' },
+                { id: 'stellar-crown', series: 'sv' },
+                { id: 'shrouded-fable', series: 'sv' }
+            ];
+
+            const set = pokemonSets.find(s => s.id === id);
+            if (!set) {
+                console.log(`Set not found: ${id}`);
+                return null;
+            }
+
+            const seriesFolder = seriesMap[set.series];
+            if (!seriesFolder) {
+                console.log(`Series folder not found for: ${set.series}`);
+                return null;
+            }
+
+            const logoPath = `English-Pictures/Logos/${seriesFolder}/${id}.png`;
+            console.log(`Generated path for ${id}: ${logoPath}`);
+            return logoPath;
+        }
+
+        // Test some paths
+        const testIds = ['surging-sparks', 'stellar-crown', 'shrouded-fable'];
+        const results = document.getElementById('test-results');
+
+        testIds.forEach(id => {
+            const path = getLogoPath(id);
+            const div = document.createElement('div');
+            div.innerHTML = `<strong>${id}:</strong> ${path}<br>`;
+
+            // Try to load the image to test if path is valid
+            const img = new Image();
+            img.onload = function() {
+                div.innerHTML += `✅ Image loads successfully<br><img src="${path}" style="max-width: 200px;"><br><br>`;
+            };
+            img.onerror = function() {
+                div.innerHTML += `❌ Image failed to load<br><br>`;
+            };
+            img.src = path;
+
+            results.appendChild(div);
+        });
+    </script>
+</body>
+</html>
