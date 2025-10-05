@@ -27,7 +27,7 @@ const pokemonSets = [
         series: 'Scarlet & Violet',
         seriesCode: 'sv',
         date: 'Dec 2024',
-        cardCount: 180,
+        cardCount: 173,
         icon: 'WHF'
     },
     {
@@ -36,7 +36,7 @@ const pokemonSets = [
         series: 'Scarlet & Violet',
         seriesCode: 'sv',
         date: 'Dec 2024',
-        cardCount: 180,
+        cardCount: 172,
         icon: 'BBL'
     },
     {
@@ -245,7 +245,7 @@ const pokemonSets = [
         series: 'Sword & Shield',
         seriesCode: 'swsh',
         date: 'Jan 2023',
-        cardCount: 160,
+        cardCount: 159,
         icon: 'CRZ'
     },
     {
@@ -326,7 +326,7 @@ const pokemonSets = [
         series: 'Sword & Shield',
         seriesCode: 'swsh',
         date: 'Jul 2022',
-        cardCount: 88,
+        cardCount: 78,
         icon: 'PGO'
     },
     {
@@ -389,7 +389,7 @@ const pokemonSets = [
         series: 'Sword & Shield',
         seriesCode: 'swsh',
         date: 'Aug 2021',
-        cardCount: 237,
+        cardCount: 203,
         icon: 'EVS'
     },
     {
@@ -488,7 +488,7 @@ const pokemonSets = [
         series: 'Sword & Shield',
         seriesCode: 'swsh',
         date: 'Feb 2020',
-        cardCount: 400,
+        cardCount: 307,
         icon: 'SWSHP'
     },
 
@@ -526,7 +526,7 @@ const pokemonSets = [
         series: 'Sun & Moon',
         seriesCode: 'sm',
         date: 'Aug 2019',
-        cardCount: 69,
+        cardCount: 162,
         icon: 'HIF'
     },
     {
@@ -553,7 +553,7 @@ const pokemonSets = [
         series: 'Sun & Moon',
         seriesCode: 'sm',
         date: 'Apr 2019',
-        cardCount: 26,
+        cardCount: 18,
         icon: 'DET'
     },
     {
@@ -670,7 +670,7 @@ const pokemonSets = [
         series: 'Sun & Moon',
         seriesCode: 'sm',
         date: 'Feb 2017',
-        cardCount: 250,
+        cardCount: 248,
         icon: 'SMP'
     },
     {
@@ -843,7 +843,7 @@ const pokemonSets = [
         series: 'XY',
         seriesCode: 'xy',
         date: 'Oct 2013',
-        cardCount: 220,
+        cardCount: 211,
         icon: 'XYP'
     },
     {
@@ -1009,7 +1009,7 @@ const pokemonSets = [
         series: 'Black & White Promos',
         seriesCode: 'bwp',
         date: 'Apr 2011',
-        cardCount: 101,
+        cardCount: 99,
         icon: 'BWP'
     },
 
@@ -1206,7 +1206,7 @@ const pokemonSets = [
         series: 'Nintendo Promos',
         seriesCode: 'np',
         date: 'Sep 1999',
-        cardCount: 53,
+        cardCount: 40,
         icon: 'PROMO'
     },
 
