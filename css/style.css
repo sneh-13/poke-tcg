@@ -99,8 +99,8 @@ body {
 
 /* Hero Banner Section */
 .hero-banner {
-    background: linear-gradient(135deg, rgba(30, 58, 138, 0.85) 0%, rgba(59, 130, 246, 0.85) 100%),
-                url('../English-Pictures/UI-Pictures/mega-evolution-banner.png');
+    background: linear-gradient(135deg, rgba(30, 58, 138, 0.40) 0%, rgba(59, 130, 246, 0.40) 100%),
+                url('../English-Pictures/UI-Pictures/charizard-banner.png');
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
