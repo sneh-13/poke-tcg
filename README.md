@@ -19,6 +19,3 @@ Things ToDo:
     - Language Switching
     - Japanese Sets
     - Add other login/register options 
-
-    -Test Test Test
-    -Test 2
