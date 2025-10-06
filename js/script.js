@@ -1619,13 +1619,13 @@ document.addEventListener('DOMContentLoaded', function() {
 function setupEventListeners() {
     // Search functionality
     filterSearch.addEventListener('input', handleSearch);
-    
+
     // Filter functionality
     seriesFilter.addEventListener('change', handleFilters);
     yearFilter.addEventListener('change', handleFilters);
     sortFilter.addEventListener('change', handleFilters);
     groupBySeriesCheckbox.addEventListener('change', handleFilters);
-    
+
 
     // Search bar in hero section (only if elements exist)
     const searchBtn = document.querySelector('.search-btn');
@@ -1635,6 +1635,19 @@ function setupEventListeners() {
             const searchTerm = searchInput.value;
             filterSearch.value = searchTerm;
             handleSearch();
+        });
+    }
+
+    // Hero banner "Search" button - scroll to search bar
+    const heroSearchBtn = document.getElementById('explore-newest-set');
+    if (heroSearchBtn) {
+        heroSearchBtn.addEventListener('click', function() {
+            // Scroll down a fixed amount of pixels
+            window.scrollBy({ top: 580, behavior: 'smooth' });
+            // Focus on the search input after scrolling
+            setTimeout(() => {
+                filterSearch.focus();
+            }, 500);
         });
     }
 }
