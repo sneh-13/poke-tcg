@@ -2044,6 +2044,31 @@ function getLogoPath(set) {
     return `../English-Pictures/Logos/${seriesFolder}/${fileName}.png`;
 }
 
+// Helper function to get the series logo
+function getSeriesLogoPath(seriesName, representativeSet) {
+    // Map series codes to their specific logo files that represent the entire series
+    const seriesLogoMap = {
+        'mega': '../English-Pictures/Logos/16-Mega-Evolutions/mega-evolution.png',
+        'sv': '../English-Pictures/Logos/15-Scarlet-&-Violet/scarlet-&-violet.png',
+        'swsh': '../English-Pictures/Logos/14-Sword-&-Shield/sword-&-shield.png',
+        'sm': '../English-Pictures/Logos/13-Sun-&-Moon/sun-&-moon.png',
+        'xy': '../English-Pictures/Logos/12-XY/xy.png',
+        'bw': '../English-Pictures/Logos/11-Black-&-White/black-&-white.png',
+        'hgss': '../English-Pictures/Logos/10-HeartGold-SoulSilver/heartgold-soulsilver.png',
+        'pl': '../English-Pictures/Logos/09-Platinum/platinum.png',
+        'dp': '../English-Pictures/Logos/07-Diamond-and-Pearl/diamond-and-pearl.png',
+        'base': '../English-Pictures/Logos/01-Base/base.png'
+    };
+
+    if (representativeSet && seriesLogoMap[representativeSet.seriesCode]) {
+        return seriesLogoMap[representativeSet.seriesCode];
+    }
+
+    // Fallback: If no specific series logo, try to use a generic path or just return empty
+    // (The onerror handler in the image tag will show the text as fallback)
+    return '';
+}
+
 // Navigate to set detail page
 function navigateToSet(set) {
     // Store set data in localStorage for the detail page

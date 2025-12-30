@@ -608,7 +608,7 @@ body {
     font-size: 1.25rem;
     font-weight: 600;
     margin: 2rem 0 1rem 0;
-    color: var(--accent-yellow-text);
+    color: var(--accent-blue);
     display: flex;
     align-items: center;
     gap: 1rem;
@@ -618,7 +618,7 @@ body {
     content: '';
     flex: 1;
     height: 1px;
-    background: linear-gradient(to right, var(--accent-yellow), transparent);
+    background: linear-gradient(to right, var(--accent-blue), transparent);
 }
 
 /* Set Card */
