@@ -7,72 +7,69 @@
     /* ==============================
      POKÉMON TCG BROWSER - WHITE / CHARCOAL + BLUE/YELLOW ACCENTS
      Palette:
-       Charcoal: #222831
-       Light gray: #EEEEEE
-       Blue: #00A8CC
-       Yellow: #FFC50F
+       Charcoal: #222831 (Text/UI)
+       Blue: #00A8CC (Primary Accent)
+       Yellow: #FFC50F (Secondary Accent)
+       White: #FFFFFF (Dominant BG)
      ============================== */
 
     /* Backgrounds */
     --bg-primary: #FFFFFF;
-    /* main */
-    --bg-secondary: #F7F8FA;
-    /* subtle off-white for sections */
+    --bg-secondary: #F8F9FA;
+    /* Cleaner light gray */
     --bg-tertiary: #EEEEEE;
-    /* your light gray */
     --bg-card: #FFFFFF;
 
-    /* Dark Colors for Contrast */
+    /* Dark Colors (Text/UI) */
     --dark-primary: #222831;
-    /* charcoal */
     --dark-secondary: #2B3440;
-    /* slightly lighter than charcoal for layering */
 
     /* Accent Colors */
+    --accent-blue: #00A8CC;
+    --accent-blue-hover: #0089A8;
+    --accent-blue-light: rgba(0, 168, 204, 0.1);
+    --accent-blue-text: #006C82;
+    /* Darker for accessibility (4.5:1+) */
+
     --accent-yellow: #FFC50F;
     --accent-yellow-hover: #E6B20D;
     --accent-yellow-light: rgba(255, 197, 15, 0.16);
     --accent-yellow-text: #8A6400;
-    /* readable yellow-toned text */
-
-    --accent-blue: #00A8CC;
-    --accent-blue-hover: #0089A8;
 
     /* Text Colors */
     --text-primary: #222831;
-    --text-secondary: #2B3440;
-    --text-muted: #5B6472;
-    --text-light: #8E98A6;
+    /* Charcoal */
+    --text-secondary: #57606F;
+    /* Lighter Charcoal */
+    --text-muted: #8E98A6;
+    --text-light: #FFFFFF;
+    /* For buttons/dark bgs */
 
     /* Borders & Shadows */
-    --border-subtle: rgba(34, 40, 49, 0.08);
-    --border-medium: rgba(34, 40, 49, 0.14);
-
-    /* keep name the same; use blue as the “brand” border accent */
+    --border-subtle: #E2E4E8;
+    --border-medium: #D1D5DB;
     --border-accent: rgba(0, 168, 204, 0.35);
 
-    --shadow-sm: 0 1px 3px rgba(34, 40, 49, 0.10);
-    --shadow-card: 0 2px 10px rgba(34, 40, 49, 0.08);
-
-    /* hover shadow tinted with yellow (nice for CTA cards/buttons) */
-    --shadow-hover: 0 10px 28px rgba(255, 197, 15, 0.22);
-
-    --shadow-elevated: 0 6px 18px rgba(34, 40, 49, 0.14);
+    --shadow-sm: 0 1px 3px rgba(34, 40, 49, 0.05);
+    --shadow-card: 0 4px 12px rgba(34, 40, 49, 0.06);
+    --shadow-hover: 0 8px 24px rgba(0, 168, 204, 0.15);
+    /* Blue-tinted hover */
+    --shadow-elevated: 0 10px 30px rgba(34, 40, 49, 0.1);
 
     /* Clean Card Styling */
-    --glass-bg: rgba(255, 255, 255, 0.92);
-    --glass-border: rgba(34, 40, 49, 0.08);
-    --glass-blur: blur(8px);
+    --glass-bg: rgba(255, 255, 255, 0.95);
+    --glass-border: var(--border-subtle);
+    --glass-blur: blur(12px);
 
     /* Spacing */
     --sidebar-width: 280px;
-    --header-height: 64px;
+    --header-height: 70px;
+    /* Slightly taller for modern look */
 
     /* Transitions */
     --transition-fast: 0.15s ease;
-    --transition-smooth: 0.25s ease;
+    --transition-smooth: 0.25s cubic-bezier(0.4, 0, 0.2, 1);
 }
-
 
 /* Reset and Base Styles */
 *,
@@ -100,13 +97,14 @@ body {
    NAVIGATION HEADER
    ==================================== */
 .navbar {
-    background: var(--dark-primary);
-    border-bottom: none;
+    background: var(--bg-primary);
+    border-bottom: 1px solid var(--border-subtle);
     padding: 0;
     position: sticky;
     top: 0;
     z-index: 1000;
     height: var(--header-height);
+    box-shadow: var(--shadow-sm);
 }
 
 .nav-container {
@@ -127,24 +125,25 @@ body {
 }
 
 .brand-icon {
-    font-size: 1.5rem;
+    font-size: 1.6rem;
+    filter: drop-shadow(0 2px 4px rgba(255, 197, 15, 0.3));
 }
 
 .brand-text {
     font-size: 1.5rem;
-    font-weight: 700;
-    color: #FFFFFF;
+    font-weight: 800;
+    color: var(--text-primary);
     letter-spacing: -0.5px;
     transition: color var(--transition-fast);
 }
 
 .nav-brand:hover .brand-text {
-    color: var(--accent-yellow-text);
+    color: var(--accent-blue-text);
 }
 
 .beta-badge {
-    background: var(--accent-yellow);
-    color: var(--text-primary);
+    background: var(--accent-blue-light);
+    color: var(--accent-blue);
     font-size: 0.65rem;
     font-weight: 700;
     padding: 0.2rem 0.5rem;
@@ -169,9 +168,16 @@ body {
     border-radius: 8px;
 }
 
-.nav-links a:hover {
+.nav-links a:hover,
+.nav-links a.active {
     color: var(--text-primary);
-    background: rgba(255, 255, 255, 0.05);
+    background: var(--bg-secondary);
+}
+
+.nav-links a.active {
+    color: var(--accent-blue-text);
+    background: var(--accent-blue-light);
+    font-weight: 600;
 }
 
 /* Language Selector */
@@ -237,15 +243,27 @@ body {
    HERO BANNER
    ==================================== */
 .hero-banner {
-    background: linear-gradient(135deg, rgba(34, 40, 49, 0.88) 0%, rgba(57, 62, 70, 0.88) 100%),
-        url('../English-Pictures/UI-Pictures/charizard-banner.png');
-    background-size: cover;
-    background-position: center;
-    padding: 3.5rem 0;
-    min-height: 280px;
-    display: flex;
-    align-items: center;
-    border-bottom: none;
+    background: var(--bg-secondary);
+    padding: 5rem 0;
+    position: relative;
+    overflow: hidden;
+    min-height: auto;
+    display: block;
+    border-bottom: 1px solid var(--border-subtle);
+}
+
+/* Decorative background circle */
+.hero-banner::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    right: -10%;
+    width: 600px;
+    height: 600px;
+    background: radial-gradient(circle, var(--accent-yellow-light) 0%, transparent 70%);
+    opacity: 0.5;
+    z-index: 0;
+    pointer-events: none;
 }
 
 .hero-content {
@@ -254,22 +272,25 @@ body {
     padding: 0 2rem;
     text-align: center;
     width: 100%;
+    position: relative;
+    z-index: 1;
 }
 
 .hero-text h1 {
-    font-size: 2.75rem;
-    font-weight: 700;
-    line-height: 1.2;
-    margin-bottom: 1rem;
+    font-size: 3.5rem;
+    font-weight: 800;
+    line-height: 1.1;
+    margin-bottom: 1.5rem;
     color: var(--text-primary);
-    text-shadow: 0 2px 20px rgba(0, 0, 0, 0.5);
+    letter-spacing: -1px;
+    text-shadow: none;
 }
 
 .hero-text p {
-    font-size: 1.1rem;
-    margin-bottom: 2rem;
+    font-size: 1.25rem;
+    margin-bottom: 2.5rem;
     color: var(--text-secondary);
-    max-width: 600px;
+    max-width: 650px;
     margin-left: auto;
     margin-right: auto;
 }
@@ -280,8 +301,8 @@ body {
 }
 
 .cta-btn {
-    background: var(--accent-yellow);
-    color: var(--bg-primary);
+    background: var(--accent-blue);
+    color: #FFFFFF;
     border: none;
     padding: 1rem 2.5rem;
     border-radius: 12px;
@@ -289,13 +310,13 @@ body {
     font-weight: 600;
     cursor: pointer;
     transition: all var(--transition-smooth);
-    box-shadow: 0 4px 20px rgba(251, 191, 36, 0.3);
+    box-shadow: 0 4px 14px rgba(0, 168, 204, 0.3);
 }
 
 .cta-btn:hover {
-    background: var(--accent-yellow-hover);
+    background: var(--accent-blue-hover);
     transform: translateY(-2px);
-    box-shadow: 0 8px 30px rgba(251, 191, 36, 0.4);
+    box-shadow: 0 6px 20px rgba(0, 168, 204, 0.4);
 }
 
 .cta-subtext {
@@ -365,9 +386,9 @@ body {
 }
 
 .sidebar-toggle:hover {
-    background: var(--accent-yellow-light);
-    color: var(--accent-yellow-text);
-    border-color: var(--accent-yellow-text);
+    background: var(--accent-blue-light);
+    color: var(--accent-blue);
+    border-color: var(--accent-blue);
 }
 
 /* Mobile sidebar toggle button */
@@ -378,13 +399,13 @@ body {
     left: 1rem;
     width: 50px;
     height: 50px;
-    background: var(--accent-yellow);
+    background: var(--accent-blue);
     border: none;
     border-radius: 50%;
-    color: var(--bg-primary);
+    color: #FFFFFF;
     font-size: 1.5rem;
     cursor: pointer;
-    box-shadow: 0 4px 20px rgba(251, 191, 36, 0.4);
+    box-shadow: 0 4px 20px rgba(0, 168, 204, 0.4);
     z-index: 100;
     transition: all var(--transition-fast);
 }
@@ -453,8 +474,8 @@ body {
 }
 
 .filter-item.active {
-    background: rgba(251, 191, 36, 0.15);
-    color: var(--accent-yellow-text);
+    background: var(--accent-blue-light);
+    color: var(--accent-blue);
 }
 
 .filter-checkbox {
@@ -470,8 +491,8 @@ body {
 }
 
 .filter-item.active .filter-checkbox {
-    background: var(--accent-yellow);
-    border-color: var(--accent-yellow-text);
+    background: var(--accent-blue);
+    border-color: var(--accent-blue);
 }
 
 .filter-item.active .filter-checkbox::after {
@@ -513,8 +534,8 @@ body {
 
 .filter-search:focus {
     outline: none;
-    border-color: var(--accent-yellow-text);
-    box-shadow: 0 0 0 3px rgba(251, 191, 36, 0.1);
+    border-color: var(--accent-blue);
+    box-shadow: 0 0 0 3px rgba(0, 168, 204, 0.1);
 }
 
 /* ====================================
@@ -565,9 +586,9 @@ body {
 
 .view-btn:hover,
 .view-btn.active {
-    background: rgba(251, 191, 36, 0.1);
-    border-color: var(--accent-yellow-text);
-    color: var(--accent-yellow-text);
+    background: var(--accent-blue-light);
+    border-color: var(--accent-blue);
+    color: var(--accent-blue-text);
 }
 
 /* ====================================
@@ -629,7 +650,7 @@ body {
 
 .set-card:hover {
     transform: translateY(-4px);
-    border-color: var(--accent-yellow-text);
+    border-color: var(--accent-blue);
     box-shadow: var(--shadow-hover);
 }
 
@@ -707,10 +728,10 @@ body {
 
 .gallery-card:hover {
     transform: perspective(1000px) rotateX(5deg) rotateY(-5deg) translateZ(30px);
-    border-color: var(--accent-yellow-text);
+    border-color: var(--accent-blue);
     box-shadow:
         var(--shadow-hover),
-        0 0 30px rgba(251, 191, 36, 0.2);
+        0 0 30px rgba(0, 168, 204, 0.1);
 }
 
 /* Holographic Shine Effect */
@@ -825,7 +846,7 @@ body {
 }
 
 .set-header {
-    background: linear-gradient(135deg, rgba(15, 23, 42, 0.9) 0%, rgba(30, 41, 59, 0.9) 100%);
+    background: var(--bg-secondary);
     padding: 2rem;
     border-bottom: 1px solid var(--border-subtle);
     text-align: center;
@@ -873,7 +894,7 @@ body {
 
 .card-item:hover {
     transform: perspective(1000px) rotateX(5deg) rotateY(-5deg) translateZ(30px);
-    border-color: var(--accent-yellow-text);
+    border-color: var(--accent-blue);
     box-shadow: var(--shadow-hover);
 }
 
@@ -1064,7 +1085,7 @@ body {
 }
 
 .breadcrumb a {
-    color: var(--accent-blue);
+    color: var(--accent-blue-text);
     text-decoration: none;
     transition: color var(--transition-fast);
 }
