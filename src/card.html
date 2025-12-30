@@ -1,11 +1,17 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Card Price - PokéTCG Card Collector</title>
+    <title>Card Details - PokéTCG Card Collector</title>
+    <meta name="description" content="View card details, pricing, and market information.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="../css/style.css">
 </head>
+
 <body>
     <!-- Navigation Header -->
     <header class="navbar">
@@ -17,14 +23,15 @@
             </a>
             <nav class="nav-links">
                 <a href="index.html">Home</a>
+                <a href="collection.html" data-i18n="nav.collection">Collection</a>
                 <a href="account.html" id="user-menu-toggle" class="user-menu-link" data-i18n="nav.account">Account</a>
 
                 <!-- Language Selector -->
                 <div class="language-selector">
                     <button class="language-toggle" onclick="toggleLanguageDropdown()">
                         <span class="language-flag" id="current-flag">🇺🇸</span>
-                        <span class="current-language">English</span>
-                        <span style="font-size: 0.75rem;">▼</span>
+                        <span class="current-language">EN</span>
+                        <span style="font-size: 0.65rem;">▼</span>
                     </button>
                     <div class="language-dropdown" id="language-dropdown">
                         <div class="language-option active" onclick="changeLanguage('en')">
@@ -49,12 +56,12 @@
         </div>
     </header>
 
-    <!-- Card Details and Pricing -->
-    <main class="price-content">
-        <!-- Recent Sets Sidebar -->
+    <!-- Card Details Content -->
+    <div class="price-content">
+        <!-- Sidebar with Sets Navigation -->
         <aside class="recent-sets-sidebar">
-            <a href="set.html" class="back-button" id="back-to-set" onclick="return goBackToSet()">← Back to Sets</a>
-            <h3>Recent Sets</h3>
+            <a href="set.html" class="back-button" id="back-to-set" onclick="return goBackToSet()">← Back to Set</a>
+            <h3>Other Sets</h3>
             <input type="text" placeholder="Search sets..." class="sets-search-input" id="sets-search-input">
             <div class="recent-sets-list" id="recent-sets-list">
                 <!-- Will be populated by JavaScript -->
@@ -75,8 +82,11 @@
             <!-- Top Section: Card Image and Basic Info -->
             <div class="card-top-section">
                 <div class="card-image-section">
-                    <div class="card-image-large pokemon-card" id="card-image">
-                        Card Image Placeholder
+                    <div class="card-image-large" id="card-image">
+                        <div style="text-align: center; color: var(--text-muted);">
+                            <div style="font-size: 3rem; margin-bottom: 1rem;">🃏</div>
+                            <div>Card Image</div>
+                        </div>
                     </div>
 
                     <!-- Collection Controls -->
@@ -85,7 +95,8 @@
                             <span class="btn-icon">+</span>
                             Add to Collection
                         </button>
-                        <button class="collection-btn remove-btn hidden" id="remove-from-collection" onclick="removeFromCollection()">
+                        <button class="collection-btn remove-btn hidden" id="remove-from-collection"
+                            onclick="removeFromCollection()">
                             <span class="btn-icon">−</span>
                             Remove from Collection
                         </button>
@@ -124,8 +135,9 @@
                     <!-- eBay Integration -->
                     <div class="pricing-section">
                         <h3>Market Research</h3>
-                        <button class="ebay-btn" id="view-ebay-btn" onclick="openEbayListings()">
-                            <span class="ebay-icon">🔍</span>
+                        <button class="btn-primary" id="view-ebay-btn" onclick="openEbayListings()"
+                            style="width: 100%; display: flex; align-items: center; justify-content: center; gap: 0.5rem;">
+                            <span>🔍</span>
                             View eBay Sold Listings
                         </button>
                     </div>
@@ -136,7 +148,8 @@
             <div class="price-chart-section">
                 <div class="pricing-section">
                     <h3>Price History</h3>
-                    <div class="chart-container">
+                    <div class="chart-container"
+                        style="height: 250px; display: flex; align-items: center; justify-content: center; color: var(--text-muted);">
                         <canvas id="price-history-chart" width="400" height="200"></canvas>
                     </div>
                 </div>
@@ -159,22 +172,22 @@
                             <tr>
                                 <td>Near Mint</td>
                                 <td>$--</td>
-                                <td>Loading...</td>
+                                <td>--</td>
                             </tr>
                             <tr>
                                 <td>Lightly Played</td>
                                 <td>$--</td>
-                                <td>Loading...</td>
+                                <td>--</td>
                             </tr>
                             <tr>
                                 <td>Moderately Played</td>
                                 <td>$--</td>
-                                <td>Loading...</td>
+                                <td>--</td>
                             </tr>
                             <tr>
                                 <td>Heavily Played</td>
                                 <td>$--</td>
-                                <td>Loading...</td>
+                                <td>--</td>
                             </tr>
                         </tbody>
                     </table>
@@ -195,24 +208,24 @@
                             <tr>
                                 <td>PSA 10</td>
                                 <td>$--</td>
-                                <td>Loading...</td>
+                                <td>--</td>
                             </tr>
                             <tr>
                                 <td>PSA 9</td>
                                 <td>$--</td>
-                                <td>Loading...</td>
+                                <td>--</td>
                             </tr>
                             <tr>
                                 <td>PSA 8</td>
                                 <td>$--</td>
-                                <td>Loading...</td>
+                                <td>--</td>
                             </tr>
                         </tbody>
                     </table>
                 </div>
             </div>
         </div>
-    </main>
+    </div>
 
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="../js/i18n.js"></script>
@@ -221,4 +234,5 @@
     <script src="../js/script.js"></script>
     <script src="../js/card.js"></script>
 </body>
+
 </html>

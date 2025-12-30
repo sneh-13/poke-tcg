@@ -1610,7 +1610,7 @@ const sortFilter = document.getElementById('sort-filter');
 const groupBySeriesCheckbox = document.getElementById('group-by-series');
 
 // Initialize the page
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
     renderSets(pokemonSets);
     setupEventListeners();
 });
@@ -1618,20 +1618,26 @@ document.addEventListener('DOMContentLoaded', function() {
 // Setup event listeners
 function setupEventListeners() {
     // Search functionality
-    filterSearch.addEventListener('input', handleSearch);
+    if (filterSearch) {
+        filterSearch.addEventListener('input', handleSearch);
+    }
 
-    // Filter functionality
-    seriesFilter.addEventListener('change', handleFilters);
-    yearFilter.addEventListener('change', handleFilters);
-    sortFilter.addEventListener('change', handleFilters);
-    groupBySeriesCheckbox.addEventListener('change', handleFilters);
+    // Legacy dropdown filter functionality (backwards compatibility)
+    if (seriesFilter) seriesFilter.addEventListener('change', handleFilters);
+    if (yearFilter) yearFilter.addEventListener('change', handleFilters);
+    if (sortFilter) sortFilter.addEventListener('change', handleFilters);
+    if (groupBySeriesCheckbox) groupBySeriesCheckbox.addEventListener('change', handleFilters);
+
+    // New sidebar functionality
+    setupSidebar();
+    setupFilterItems();
 
 
     // Search bar in hero section (only if elements exist)
     const searchBtn = document.querySelector('.search-btn');
     const searchInput = document.querySelector('.search-input');
     if (searchBtn && searchInput) {
-        searchBtn.addEventListener('click', function() {
+        searchBtn.addEventListener('click', function () {
             const searchTerm = searchInput.value;
             filterSearch.value = searchTerm;
             handleSearch();
@@ -1641,7 +1647,7 @@ function setupEventListeners() {
     // Hero banner "Search" button - scroll to search bar
     const heroSearchBtn = document.getElementById('explore-newest-set');
     if (heroSearchBtn) {
-        heroSearchBtn.addEventListener('click', function() {
+        heroSearchBtn.addEventListener('click', function () {
             // Scroll down a fixed amount of pixels
             window.scrollBy({ top: 580, behavior: 'smooth' });
             // Focus on the search input after scrolling
@@ -1655,8 +1661,8 @@ function setupEventListeners() {
 // Handle search functionality
 function handleSearch() {
     const searchTerm = filterSearch.value.toLowerCase();
-    const filteredSets = pokemonSets.filter(set => 
-        set.name.toLowerCase().includes(searchTerm) || 
+    const filteredSets = pokemonSets.filter(set =>
+        set.name.toLowerCase().includes(searchTerm) ||
         set.series.toLowerCase().includes(searchTerm) ||
         set.icon.toLowerCase().includes(searchTerm)
     );
@@ -1666,29 +1672,29 @@ function handleSearch() {
 // Handle all filters
 function handleFilters() {
     let filteredSets = [...pokemonSets];
-    
+
     // Apply series filter
     const selectedSeries = seriesFilter.value;
     if (selectedSeries) {
         filteredSets = filteredSets.filter(set => set.seriesCode === selectedSeries);
     }
-    
+
     // Apply year filter
     const selectedYear = yearFilter.value;
     if (selectedYear) {
         filteredSets = filteredSets.filter(set => set.date.includes(selectedYear));
     }
-    
+
     // Apply search filter
     const searchTerm = filterSearch.value.toLowerCase();
     if (searchTerm) {
-        filteredSets = filteredSets.filter(set => 
-            set.name.toLowerCase().includes(searchTerm) || 
+        filteredSets = filteredSets.filter(set =>
+            set.name.toLowerCase().includes(searchTerm) ||
             set.series.toLowerCase().includes(searchTerm) ||
             set.icon.toLowerCase().includes(searchTerm)
         );
     }
-    
+
     // Apply sorting
     const sortBy = sortFilter.value;
     if (sortBy === 'newest') {
@@ -1698,18 +1704,18 @@ function handleFilters() {
     } else if (sortBy === 'alphabetical') {
         filteredSets.sort((a, b) => a.name.localeCompare(b.name));
     }
-    
+
     renderSets(filteredSets);
 }
 
 // Render sets to the grid
 function renderSets(sets) {
     if (!setsGrid) return;
-    
+
     setsGrid.innerHTML = '';
-    
+
     const groupBySeries = groupBySeriesCheckbox?.checked ?? true;
-    
+
     if (groupBySeries) {
         renderGroupedSets(sets);
     } else {
@@ -1720,19 +1726,19 @@ function renderSets(sets) {
 // Render sets grouped by series
 function renderGroupedSets(sets) {
     const groupedSets = groupSetsBySeries(sets);
-    
+
     Object.entries(groupedSets).forEach(([series, seriesSets]) => {
         // Create series title
         const seriesGroup = document.createElement('div');
         seriesGroup.className = 'series-group';
-        
+
         const seriesTitle = document.createElement('h3');
         seriesTitle.className = 'series-title';
         seriesTitle.textContent = series;
         seriesGroup.appendChild(seriesTitle);
-        
+
         setsGrid.appendChild(seriesGroup);
-        
+
         // Create set cards for this series
         seriesSets.forEach(set => {
             const setCard = createSetCard(set);
@@ -1772,9 +1778,9 @@ function createSetCard(set) {
 
     setCard.innerHTML = `
         <div class="set-logo-container">
-            <img src="${logoPath}" alt="${set.name} logo" class="set-logo" onerror="this.style.display='none'; this.nextElementSibling.style.marginTop='2rem';" />
-            <div class="set-subtitle">${set.name}</div>
+            <img src="${logoPath}" alt="${set.name} logo" class="set-logo" onerror="this.style.display='none';" />
         </div>
+        <div class="set-name">${set.name}</div>
         <div class="set-meta">
             <span class="set-date">${set.date}</span>
             <span class="set-count">${set.cardCount} cards</span>
@@ -2042,7 +2048,7 @@ function getLogoPath(set) {
 function navigateToSet(set) {
     // Store set data in localStorage for the detail page
     localStorage.setItem('currentSet', JSON.stringify(set));
-    
+
     // Navigate to set detail page
     window.location.href = 'set.html';
 }
@@ -2050,3 +2056,157 @@ function navigateToSet(set) {
 // Export functions for other pages to use
 window.pokemonSets = pokemonSets;
 window.sampleCards = sampleCards;
+
+// ====================================
+// SIDEBAR AND FILTER FUNCTIONALITY
+// ====================================
+
+// Setup sidebar toggle functionality
+function setupSidebar() {
+    const sidebar = document.getElementById('filter-sidebar');
+    const sidebarClose = document.getElementById('sidebar-close');
+    const toggleBtn = document.getElementById('toggle-sidebar-btn');
+    const mobileToggle = document.getElementById('mobile-sidebar-toggle');
+
+    // Close sidebar button
+    if (sidebarClose) {
+        sidebarClose.addEventListener('click', () => {
+            sidebar.classList.add('collapsed');
+        });
+    }
+
+    // Toggle sidebar button in header
+    if (toggleBtn) {
+        toggleBtn.addEventListener('click', () => {
+            if (sidebar) {
+                sidebar.classList.toggle('collapsed');
+                // On mobile, add 'open' class for overlay behavior
+                if (window.innerWidth <= 1024) {
+                    sidebar.classList.toggle('open');
+                }
+            }
+        });
+    }
+
+    // Mobile floating toggle button
+    if (mobileToggle) {
+        mobileToggle.addEventListener('click', () => {
+            if (sidebar) {
+                sidebar.classList.toggle('open');
+                sidebar.classList.remove('collapsed');
+            }
+        });
+    }
+
+    // Close sidebar when clicking outside on mobile
+    document.addEventListener('click', (e) => {
+        if (window.innerWidth <= 1024 && sidebar && sidebar.classList.contains('open')) {
+            if (!sidebar.contains(e.target) &&
+                !mobileToggle?.contains(e.target) &&
+                !toggleBtn?.contains(e.target)) {
+                sidebar.classList.remove('open');
+            }
+        }
+    });
+}
+
+// Setup filter item click handlers
+function setupFilterItems() {
+    // Series filter items
+    document.querySelectorAll('#series-filters .filter-item').forEach(item => {
+        item.addEventListener('click', () => {
+            item.classList.toggle('active');
+            applyFiltersFromSidebar();
+        });
+    });
+
+    // Year filter items
+    document.querySelectorAll('#year-filters .filter-item').forEach(item => {
+        item.addEventListener('click', () => {
+            item.classList.toggle('active');
+            applyFiltersFromSidebar();
+        });
+    });
+
+    // Sort options (single select)
+    document.querySelectorAll('#sort-options .filter-item').forEach(item => {
+        item.addEventListener('click', () => {
+            // Remove active from all sort options
+            document.querySelectorAll('#sort-options .filter-item').forEach(i => i.classList.remove('active'));
+            item.classList.add('active');
+            applyFiltersFromSidebar();
+        });
+    });
+
+    // Sidebar search
+    const sidebarSearch = document.getElementById('sidebar-search');
+    if (sidebarSearch) {
+        sidebarSearch.addEventListener('input', () => {
+            applyFiltersFromSidebar();
+        });
+    }
+}
+
+// Apply filters from sidebar
+function applyFiltersFromSidebar() {
+    let filteredSets = [...pokemonSets];
+
+    // Get active series filters
+    const activeSeries = Array.from(document.querySelectorAll('#series-filters .filter-item.active'))
+        .map(item => item.dataset.series);
+
+    if (activeSeries.length > 0) {
+        filteredSets = filteredSets.filter(set => activeSeries.includes(set.seriesCode));
+    }
+
+    // Get active year filters
+    const activeYears = Array.from(document.querySelectorAll('#year-filters .filter-item.active'))
+        .map(item => item.dataset.year);
+
+    if (activeYears.length > 0) {
+        filteredSets = filteredSets.filter(set => {
+            return activeYears.some(year => set.date.includes(year));
+        });
+    }
+
+    // Apply sidebar search
+    const sidebarSearch = document.getElementById('sidebar-search');
+    if (sidebarSearch && sidebarSearch.value) {
+        const searchTerm = sidebarSearch.value.toLowerCase();
+        filteredSets = filteredSets.filter(set =>
+            set.name.toLowerCase().includes(searchTerm) ||
+            set.series.toLowerCase().includes(searchTerm)
+        );
+    }
+
+    // Apply sorting
+    const activeSort = document.querySelector('#sort-options .filter-item.active');
+    const sortBy = activeSort?.dataset.sort || 'newest';
+
+    if (sortBy === 'newest') {
+        filteredSets.sort((a, b) => new Date(b.date) - new Date(a.date));
+    } else if (sortBy === 'oldest') {
+        filteredSets.sort((a, b) => new Date(a.date) - new Date(b.date));
+    } else if (sortBy === 'alphabetical') {
+        filteredSets.sort((a, b) => a.name.localeCompare(b.name));
+    }
+
+    // Update counter
+    const setsCount = document.getElementById('sets-count');
+    if (setsCount) {
+        setsCount.textContent = `${filteredSets.length} sets found`;
+    }
+
+    renderSets(filteredSets);
+}
+
+// Toggle filter group expand/collapse
+function toggleFilterGroup(header) {
+    const group = header.parentElement;
+    group.classList.toggle('collapsed');
+}
+
+// Export for global access
+window.toggleFilterGroup = toggleFilterGroup;
+window.setupSidebar = setupSidebar;
+window.setupFilterItems = setupFilterItems;

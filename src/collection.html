@@ -1,11 +1,144 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>My Collection - PokéTCG Card Collector</title>
+    <meta name="description" content="Manage and view your Pokémon card collection.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="../css/style.css">
+    <style>
+        /* Collection-specific styles */
+        .collection-hero {
+            background: linear-gradient(135deg, rgba(15, 23, 42, 0.9) 0%, rgba(30, 41, 59, 0.9) 100%);
+            padding: 3rem 2rem;
+            border-bottom: 1px solid var(--border-subtle);
+        }
+
+        .collection-hero-content {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .collection-hero h1 {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .collection-hero p {
+            color: var(--text-secondary);
+            font-size: 1rem;
+        }
+
+        .collection-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        .stat-card {
+            background: var(--glass-bg);
+            border: 1px solid var(--border-subtle);
+            border-radius: 12px;
+            padding: 1.5rem;
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--accent-gold);
+            margin-bottom: 0.25rem;
+        }
+
+        .stat-label {
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+        }
+
+        .collection-main {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .collection-filters {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+            margin-bottom: 2rem;
+            background: var(--glass-bg);
+            padding: 1.25rem;
+            border-radius: 12px;
+            border: 1px solid var(--border-subtle);
+        }
+
+        .collection-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .empty-collection {
+            text-align: center;
+            padding: 4rem 2rem;
+            color: var(--text-muted);
+        }
+
+        .empty-icon {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+            opacity: 0.5;
+        }
+
+        .empty-collection h3 {
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .empty-collection p {
+            margin-bottom: 1.5rem;
+        }
+
+        .browse-sets-btn {
+            display: inline-block;
+            background: var(--accent-gold);
+            color: var(--bg-primary);
+            padding: 0.75rem 1.5rem;
+            border-radius: 10px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all var(--transition-fast);
+        }
+
+        .browse-sets-btn:hover {
+            background: var(--accent-gold-hover);
+            transform: translateY(-2px);
+        }
+
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--accent-blue);
+            text-decoration: none;
+            margin-bottom: 1rem;
+            font-size: 0.9rem;
+            transition: color var(--transition-fast);
+        }
+
+        .back-link:hover {
+            color: var(--accent-gold);
+        }
+    </style>
 </head>
+
 <body>
     <!-- Navigation Header -->
     <header class="navbar">
@@ -17,14 +150,15 @@
             </a>
             <nav class="nav-links">
                 <a href="index.html">Home</a>
-                <a href="account.html" id="user-menu-toggle" class="user-menu-link">Account</a>
+                <a href="collection.html" class="active" data-i18n="nav.collection">Collection</a>
+                <a href="account.html" id="user-menu-toggle" class="user-menu-link" data-i18n="nav.account">Account</a>
 
                 <!-- Language Selector -->
                 <div class="language-selector">
                     <button class="language-toggle" onclick="toggleLanguageDropdown()">
                         <span class="language-flag" id="current-flag">🇺🇸</span>
-                        <span class="current-language">English</span>
-                        <span style="font-size: 0.75rem;">▼</span>
+                        <span class="current-language">EN</span>
+                        <span style="font-size: 0.65rem;">▼</span>
                     </button>
                     <div class="language-dropdown" id="language-dropdown">
                         <div class="language-option active" onclick="changeLanguage('en')">
@@ -49,19 +183,14 @@
         </div>
     </header>
 
-    <!-- Collection Header -->
-    <section class="collection-header">
-        <div class="main-content">
-            <a href="account.html" class="back-button">← Back to Account</a>
-            <h1 class="collection-title" id="collection-title">My Collection</h1>
-            <p class="collection-subtitle" id="collection-subtitle">Manage and view your Pokémon card collection</p>
-        </div>
-    </section>
+    <!-- Collection Hero -->
+    <section class="collection-hero">
+        <div class="collection-hero-content">
+            <a href="account.html" class="back-link">← Back to Account</a>
+            <h1 id="collection-title">My Collection</h1>
+            <p id="collection-subtitle">Manage and view your Pokémon card collection</p>
 
-    <!-- Collection Content -->
-    <main class="collection-content">
-        <!-- Collection Stats -->
-        <div class="collection-overview">
+            <!-- Collection Stats -->
             <div class="collection-stats">
                 <div class="stat-card">
                     <div class="stat-number" id="total-cards-stat">0</div>
@@ -73,15 +202,18 @@
                 </div>
                 <div class="stat-card">
                     <div class="stat-number" id="sets-represented">0</div>
-                    <div class="stat-label">Sets Represented</div>
+                    <div class="stat-label">Sets</div>
                 </div>
                 <div class="stat-card">
                     <div class="stat-number" id="estimated-value">$0</div>
-                    <div class="stat-label">Estimated Value</div>
+                    <div class="stat-label">Est. Value</div>
                 </div>
             </div>
         </div>
+    </section>
 
+    <!-- Collection Content -->
+    <main class="collection-main">
         <!-- Collection Filters -->
         <div class="collection-filters">
             <input type="text" placeholder="Search your collection..." class="filter-search" id="collection-search">
@@ -110,7 +242,7 @@
         </div>
 
         <!-- Empty State -->
-        <div class="empty-collection" id="empty-collection" style="display: none;">
+        <div class="empty-collection" id="empty-collection">
             <div class="empty-icon">📦</div>
             <h3>Your collection is empty</h3>
             <p>Start adding cards to your collection by browsing sets and clicking "Add to Collection"</p>
@@ -123,4 +255,5 @@
     <script src="../js/account.js"></script>
     <script src="../js/collection.js"></script>
 </body>
+
 </html>

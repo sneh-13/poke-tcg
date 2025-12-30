@@ -1,11 +1,17 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Set Details - PokéTCG Card Collector</title>
+    <meta name="description" content="Browse all cards in this Pokémon TCG set.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="../css/style.css">
 </head>
+
 <body>
     <!-- Navigation Header -->
     <header class="navbar">
@@ -17,14 +23,15 @@
             </a>
             <nav class="nav-links">
                 <a href="index.html">Home</a>
+                <a href="collection.html" data-i18n="nav.collection">Collection</a>
                 <a href="account.html" id="user-menu-toggle" class="user-menu-link" data-i18n="nav.account">Account</a>
 
                 <!-- Language Selector -->
                 <div class="language-selector">
                     <button class="language-toggle" onclick="toggleLanguageDropdown()">
                         <span class="language-flag" id="current-flag">🇺🇸</span>
-                        <span class="current-language">English</span>
-                        <span style="font-size: 0.75rem;">▼</span>
+                        <span class="current-language">EN</span>
+                        <span style="font-size: 0.65rem;">▼</span>
                     </button>
                     <div class="language-dropdown" id="language-dropdown">
                         <div class="language-option active" onclick="changeLanguage('en')">
@@ -50,14 +57,87 @@
     </header>
 
     <!-- Set Content -->
-    <main class="set-content">
-        <!-- Recent Sets Sidebar -->
-        <aside class="recent-sets-sidebar">
-            <a href="index.html" class="back-button">← Back to Sets</a>
-            <h3>Recent Sets</h3>
-            <input type="text" placeholder="Search sets..." class="sets-search-input" id="sets-search-input">
-            <div class="recent-sets-list" id="recent-sets-list">
-                <!-- Will be populated by JavaScript -->
+    <div class="set-content">
+        <!-- Filter Sidebar -->
+        <aside class="filter-sidebar" id="filter-sidebar">
+            <div class="sidebar-header">
+                <h3>Filters</h3>
+                <button class="sidebar-toggle" id="sidebar-close" title="Close sidebar">✕</button>
+            </div>
+
+            <!-- Back Button -->
+            <a href="index.html" class="back-button"
+                style="margin-bottom: 1.5rem; display: block; background: var(--accent-blue); color: white; padding: 0.75rem 1rem; border-radius: 10px; text-decoration: none; text-align: center; transition: all 0.2s;">←
+                Back to Sets</a>
+
+            <!-- Search -->
+            <input type="text" placeholder="Search cards..." class="filter-search" id="card-search">
+
+            <!-- Rarity Filter -->
+            <div class="filter-group">
+                <div class="filter-group-header" onclick="toggleFilterGroup(this)">
+                    <h4>Rarity</h4>
+                    <span class="filter-group-toggle">▼</span>
+                </div>
+                <div class="filter-group-content" id="rarity-filters">
+                    <div class="filter-item" data-rarity="common">
+                        <span class="filter-checkbox"></span>
+                        <span class="filter-label">Common</span>
+                    </div>
+                    <div class="filter-item" data-rarity="uncommon">
+                        <span class="filter-checkbox"></span>
+                        <span class="filter-label">Uncommon</span>
+                    </div>
+                    <div class="filter-item" data-rarity="rare">
+                        <span class="filter-checkbox"></span>
+                        <span class="filter-label">Rare</span>
+                    </div>
+                    <div class="filter-item" data-rarity="rare-holo">
+                        <span class="filter-checkbox"></span>
+                        <span class="filter-label">Rare Holo</span>
+                    </div>
+                    <div class="filter-item" data-rarity="rare-ultra">
+                        <span class="filter-checkbox"></span>
+                        <span class="filter-label">Ultra Rare</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Type Filter -->
+            <div class="filter-group">
+                <div class="filter-group-header" onclick="toggleFilterGroup(this)">
+                    <h4>Card Type</h4>
+                    <span class="filter-group-toggle">▼</span>
+                </div>
+                <div class="filter-group-content" id="type-filters">
+                    <div class="filter-item" data-type="pokemon">
+                        <span class="filter-checkbox"></span>
+                        <span class="filter-label">Pokémon</span>
+                    </div>
+                    <div class="filter-item" data-type="trainer">
+                        <span class="filter-checkbox"></span>
+                        <span class="filter-label">Trainer</span>
+                    </div>
+                    <div class="filter-item" data-type="energy">
+                        <span class="filter-checkbox"></span>
+                        <span class="filter-label">Energy</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quick Sets Navigation -->
+            <div class="filter-group">
+                <div class="filter-group-header" onclick="toggleFilterGroup(this)">
+                    <h4>Other Sets</h4>
+                    <span class="filter-group-toggle">▼</span>
+                </div>
+                <div class="filter-group-content" id="sets-list">
+                    <input type="text" placeholder="Search sets..." class="filter-search" id="sets-search-input"
+                        style="margin-bottom: 0.75rem;">
+                    <div class="recent-sets-list" id="recent-sets-list" style="max-height: 200px; overflow-y: auto;">
+                        <!-- Will be populated by JavaScript -->
+                    </div>
+                </div>
             </div>
         </aside>
 
@@ -69,31 +149,15 @@
                 <p class="set-info" id="set-info">Loading set information...</p>
             </div>
 
-            <!-- Set Filters -->
-            <div class="set-filters">
-                <input type="text" placeholder="Search cards..." class="filter-search" id="card-search">
-                <select class="filter-select" id="rarity-filter">
-                    <option value="">All Rarities</option>
-                    <option value="common">Common</option>
-                    <option value="uncommon">Uncommon</option>
-                    <option value="rare">Rare</option>
-                    <option value="rare-holo">Rare Holo</option>
-                    <option value="rare-ultra">Ultra Rare</option>
-                </select>
-                <select class="filter-select" id="type-filter">
-                    <option value="">All Types</option>
-                    <option value="pokemon">Pokémon</option>
-                    <option value="trainer">Trainer</option>
-                    <option value="energy">Energy</option>
-                </select>
-            </div>
-
             <!-- Cards Grid -->
             <div class="cards-grid" id="cards-grid">
                 <!-- Cards will be populated by JavaScript -->
             </div>
         </div>
-    </main>
+    </div>
+
+    <!-- Mobile Sidebar Toggle -->
+    <button class="mobile-sidebar-toggle" id="mobile-sidebar-toggle" title="Open filters">☰</button>
 
     <script src="../js/i18n.js"></script>
     <script src="../js/language-selector.js"></script>
@@ -101,4 +165,5 @@
     <script src="../js/script.js"></script>
     <script src="../js/set.js"></script>
 </body>
+
 </html>
