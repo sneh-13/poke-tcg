@@ -1,23 +1,51 @@
 'use client';
 
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { useParams } from 'next/navigation';
 import Link from 'next/link';
-import { pokemonSets } from '@/data/sets';
-import { getSampleCards } from '@/data/sampleCards';
+import { getCardsFromSet, getSetById } from '@/lib/pokemonTCGApi';
 import { useTranslation } from '@/contexts/I18nContext';
 
 export default function SetPage() {
   const params = useParams();
-  const setId = params.id as string;
+  const setSlug = params.id as string; // e.g., "swsh7-evolving-skies" or "swsh7"
   const { t } = useTranslation();
 
-  const set = pokemonSets.find((s) => s.id === setId);
-  const cards = getSampleCards(setId, set?.cardCount || 20);
+  // Extract the set code (first part before hyphen) for API calls
+  // e.g., "swsh7-evolving-skies" -> "swsh7"
+  const setCode = setSlug.split('-')[0];
+
+  // State for API data
+  const [set, setSet] = useState<any>(null);
+  const [cards, setCards] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedRarities, setSelectedRarities] = useState<string[]>([]);
   const [selectedTypes, setSelectedTypes] = useState<string[]>([]);
+
+  // Fetch set and cards on mount
+  useEffect(() => {
+    async function fetchData() {
+      try {
+        setLoading(true);
+        const [setData, cardsData] = await Promise.all([
+          getSetById(setCode),
+          getCardsFromSet(setCode)
+        ]);
+        setSet(setData);
+        setCards(cardsData);
+        setError(null);
+      } catch (err) {
+        console.error('Error fetching data:', err);
+        setError('Failed to load set data. Please try again.');
+      } finally {
+        setLoading(false);
+      }
+    }
+    fetchData();
+  }, [setCode]);
 
   const filteredCards = useMemo(() => {
     let filtered = cards;
@@ -29,15 +57,62 @@ export default function SetPage() {
     }
 
     if (selectedRarities.length > 0) {
-      filtered = filtered.filter((card) => selectedRarities.includes(card.rarity));
+      filtered = filtered.filter((card) =>
+        card.rarity && selectedRarities.includes(card.rarity)
+      );
     }
 
     if (selectedTypes.length > 0) {
-      filtered = filtered.filter((card) => selectedTypes.includes(card.type));
+      filtered = filtered.filter((card) =>
+        card.supertype && selectedTypes.includes(card.supertype.toLowerCase())
+      );
     }
 
     return filtered;
   }, [cards, searchQuery, selectedRarities, selectedTypes]);
+
+  // Get unique rarities from cards for filter options
+  const availableRarities = useMemo(() => {
+    return Array.from(new Set(cards.map(c => c.rarity).filter(Boolean)));
+  }, [cards]);
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-poke-blue mx-auto mb-4"></div>
+          <p className="text-gray-600">Loading Evolving Skies cards...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="text-center max-w-md px-4">
+          <div className="text-6xl mb-4">⚠️</div>
+          <h1 className="text-2xl font-bold text-charcoal mb-2">API Error</h1>
+          <p className="text-red-600 mb-4">{error}</p>
+          <p className="text-gray-600 mb-6">
+            The Pokemon TCG API is currently experiencing issues. This is not a problem with your app.
+            Try refreshing in a few moments.
+          </p>
+          <div className="flex gap-4 justify-center">
+            <button
+              onClick={() => window.location.reload()}
+              className="px-4 py-2 bg-poke-blue text-white rounded hover:bg-blue-600"
+            >
+              Try Again
+            </button>
+            <Link href="/" className="px-4 py-2 border border-gray-300 rounded hover:bg-gray-100">
+              Back to Sets
+            </Link>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   if (!set) {
     return <div className="p-8">Set not found</div>;
@@ -73,8 +148,8 @@ export default function SetPage() {
           {/* Rarity Filter */}
           <div className="mb-6">
             <h3 className="text-sm font-semibold text-charcoal mb-3">Rarity</h3>
-            <div className="space-y-2">
-              {['common', 'uncommon', 'rare', 'rare-holo', 'rare-ultra'].map((rarity) => (
+            <div className="space-y-2 max-h-64 overflow-y-auto">
+              {availableRarities.map((rarity) => (
                 <label key={rarity} className="flex items-center gap-2 cursor-pointer">
                   <input
                     type="checkbox"
@@ -82,7 +157,7 @@ export default function SetPage() {
                     onChange={() => toggleRarity(rarity)}
                     className="w-4 h-4 text-poke-blue border-gray-300 rounded focus:ring-poke-blue"
                   />
-                  <span className="text-sm text-gray-700 capitalize">{rarity.replace('-', ' ')}</span>
+                  <span className="text-sm text-gray-700 capitalize">{rarity}</span>
                 </label>
               ))}
             </div>
@@ -116,28 +191,49 @@ export default function SetPage() {
           <div className="mb-8">
             <h1 className="text-4xl font-bold text-charcoal mb-2">{set.name}</h1>
             <p className="text-gray-600">
-              {set.series} • {set.date} • {set.cardCount} cards
+              {set.series} • {set.releaseDate} • {set.printedTotal || set.total} cards
             </p>
           </div>
 
           {/* Cards Grid */}
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
-            {filteredCards.map((card) => (
+            {filteredCards.map((card) => {
+              // Extract card number from full ID (e.g., "swsh7-110" -> "110")
+              const cardNumber = card.id.split('-').slice(1).join('-') || card.number;
+              return (
               <Link
                 key={card.id}
-                href={`/card/${setId}/${card.id}`}
+                href={`/card/${setSlug}/${cardNumber}`}
                 className="glass-card p-3 hover:shadow-hover transition-all group"
               >
-                <div className="aspect-[2/3] bg-gray-100 rounded-lg mb-2 flex items-center justify-center">
-                  <span className="text-sm text-gray-400">{card.number}</span>
+                <div className="aspect-[2/3] bg-gray-100 rounded-lg mb-2 overflow-hidden">
+                  {card.images?.small ? (
+                    <img
+                      src={card.images.small}
+                      alt={card.name}
+                      className="w-full h-full object-contain"
+                      loading="lazy"
+                    />
+                  ) : (
+                    <div className="w-full h-full flex items-center justify-center">
+                      <span className="text-sm text-gray-400">{card.number}</span>
+                    </div>
+                  )}
                 </div>
                 <h3 className="text-sm font-semibold text-charcoal group-hover:text-poke-blue transition-colors line-clamp-1">
                   {card.name}
                 </h3>
-                <p className="text-xs text-gray-500 capitalize">{card.rarity.replace('-', ' ')}</p>
+                <p className="text-xs text-gray-500 capitalize">{card.rarity}</p>
               </Link>
-            ))}
+              );
+            })}
           </div>
+
+          {filteredCards.length === 0 && (
+            <div className="text-center py-12">
+              <p className="text-gray-500">No cards found matching your filters.</p>
+            </div>
+          )}
         </main>
       </div>
     </div>
